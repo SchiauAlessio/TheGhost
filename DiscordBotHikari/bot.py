@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 load_dotenv()
 log = logging.getLogger(__name__)
 token = os.getenv('BOT_TOKEN') #TheGhost
-#token="OTUyNjE1MzczMDM4MDUxMzY5.Yi4mMw.yWz-0gk6VVyJSoENshqvESWvPfw" #TheSupremeGhost
+# token=os.getenv('THE_SUPREME_GHOST_BOT_TOKEN') #TheSupremeGhost #TheSupremeGhost
 bot = lightbulb.BotApp(token,
                        prefix="$$",
                        default_enabled_guilds=int(os.getenv('THE_GHOSTS_SERVER_ID')),
