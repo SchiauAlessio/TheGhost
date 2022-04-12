@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 load_dotenv()
 log = logging.getLogger(__name__)
 token = os.getenv('BOT_TOKEN') #TheGhost
-# token=os.getenv('THE_SUPREME_GHOST_BOT_TOKEN') #TheSupremeGhost #TheSupremeGhost
+# token=os.getenv('THE_SUPREME_GHOST_BOT_TOKEN') #TheSupremeGhost
 bot = lightbulb.BotApp(token,
                        prefix="$$",
                        default_enabled_guilds=int(os.getenv('THE_GHOSTS_SERVER_ID')),
@@ -77,36 +77,37 @@ async def on_stopping(event: hikari.StoppingEvent) -> None:
 
 @bot.listen(hikari.GuildMessageCreateEvent)
 async def on_message_create(event: hikari.GuildMessageCreateEvent) -> None:
-    if event.message.content.lower() == "tell me a secret":
-        await event.message.respond("You are extremely stupid", reply=True, mentions_reply=True)
+    if not event.author.is_bot:
+        if event.message.content.lower() == "tell me a secret":
+            await event.message.respond("You are extremely stupid", reply=True, mentions_reply=True)
 
-    if event.message.content.lower() == "embed" or event.message.content.lower() == "server invite" and not event.author.is_bot:
-        embed = (
-            hikari.Embed(
-                title="The Ghosts server invite link",
-                description="https://discord.gg/BJky9WrE56",
-                colour=event.message.member.get_top_role().colour,
-                timestamp=dt.datetime.now().astimezone(),
+        if event.message.content.lower() == "embed" or event.message.content.lower() == "server invite":
+            embed = (
+                hikari.Embed(
+                    title="The Ghosts server invite link",
+                    description="https://discord.gg/BJky9WrE56",
+                    colour=event.message.member.get_top_role().colour,
+                    timestamp=dt.datetime.now().astimezone(),
+                )
+                    .set_author(name="The Ghost")
+                    .set_footer(
+                    f"Requested by {event.message.member.display_name}",
+                    icon=event.message.member.avatar_url,
+                )
+                    .set_thumbnail(event.get_guild().icon_url)
+                    # .add_field(name="Name", value="Value", inline=True)
             )
-                .set_author(name="The Ghost")
-                .set_footer(
-                f"Requested by {event.message.member.display_name}",
-                icon=event.message.member.avatar_url,
-            )
-                .set_thumbnail(event.get_guild().icon_url)
-                # .add_field(name="Name", value="Value", inline=True)
-        )
-        await event.message.respond(embed)
+            await event.message.respond(embed)
 
-    if event.message.content == "attachment":
-        try:
-            await event.message.respond(hikari.File("Images/EldenRing.jpg"))
-        except hikari.ClientHTTPResponseError:
-            await event.message.respond("File is too large!")
+        if event.message.content.lower() == "attachment":
+            try:
+                await event.message.respond(hikari.File("Images/EldenRing.jpg"))
+            except hikari.ClientHTTPResponseError:
+                await event.message.respond("File is too large!")
 
-    if "sus" in event.message.content.lower() and not event.author.is_bot:
-        await event.message.respond("Did I hear SUS?")
-        await event.message.respond(os.getenv("SUS_URL"))
+        if "sus" in event.message.content.lower():
+            await event.message.respond("Did I hear SUS?")
+            await event.message.respond(os.getenv("SUS_URL"))
 
 @bot.listen(hikari.ExceptionEvent)
 async def on_error(event: hikari.ExceptionEvent) -> None:
